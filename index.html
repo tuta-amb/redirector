@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Search</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script type="module">
+    const input = document.querySelector("input"), form = document.querySelector("form");
+    try {
+      const parsed = new URL(document.location).searchParams;
+      sessionStorage.setItem("data", JSON.stringify({
+        query: parsed.get("q"),
+        name: parsed.get("n") ?? "q",
+        method: parsed.get("m") ?? "post",
+        url: parsed.get("a"),
+        title: parsed.get("t") ?? "Search",
+      }));
+      location.replace("/go");
+    } catch (error) {
+      alert(`
+        Something unexpected happened:
+        ${error.toString()}
+        Check DevTools for more information.
+        Will redirect to previous page upon click.
+      `.trim().replace(/^ +/gm, ''));
+      history.back();
+    }
+  </script>
+</head>
+
+<body>
+  <main>
+    <div></div>
+  </main>
+</body>
+
+</html>

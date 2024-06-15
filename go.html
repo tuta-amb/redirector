@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Search</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script type="module">
+    const input = document.querySelector("input"), form = document.querySelector("form");
+    try {
+      const params = JSON.parse(sessionStorage.getItem("data"));
+
+      document.title = params.title;
+      input.value = params.query;
+      input.name = params.name;
+      form.method = params.method ?? "post";
+      form.action = /^https?:\/\//i.test(params.url) ? params.url : `https://${params.url}`;
+      form.submit();
+    } catch (error) {
+      alert(`
+        Something unexpected happened:
+        ${error.toString()}
+        Check DevTools for more information.
+        Will redirect to previous page upon click.
+      `.trim().replace(/^ +/gm, ''));
+      history.back();
+    }
+  </script>
+</head>
+
+<body>
+  <main>
+    <div></div>
+  </main>
+  <form style="display: none;">
+    <input type="text">
+  </form>
+</body>
+
+</html>
