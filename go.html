@@ -7,16 +7,27 @@
   <link rel="stylesheet" href="style.css">
 
   <script type="module">
+    function makeURL(str) {
+      return /^https?:\/\//i.test(str) ? str : `https://${str}`;
+    }
+
     const input = document.querySelector("input"), form = document.querySelector("form");
     try {
       const params = JSON.parse(sessionStorage.getItem("data"));
 
       document.title = params.title;
-      input.value = params.query;
-      input.name = params.name;
-      form.method = params.method ?? "post";
-      form.action = /^https?:\/\//i.test(params.url) ? params.url : `https://${params.url}`;
-      form.submit();
+
+      if (params.method === "get") {
+        const url = new URL(makeURL(params.url));
+        url.searchParams.set(params.name, params.query);
+        location.replace(url.toString());
+      } else {
+        input.value = params.query;
+        input.name = params.name;
+        form.method = params.method;
+        form.action = makeURL(params.url);
+        form.submit();
+      }
     } catch (error) {
       alert(`
         Something unexpected happened:
